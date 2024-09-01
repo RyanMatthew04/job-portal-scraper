@@ -1,5 +1,4 @@
 pandas
-numpy
 selenium
 sqlalchemy
 mysql-connector-python
