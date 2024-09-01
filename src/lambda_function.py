@@ -7,9 +7,15 @@ import time
 import pandas as pd
 from sqlalchemy import create_engine
 
-driver=webdriver.Chrome()
-driver.get('https://in.indeed.com/jobs?q=graphics+designer&l=Bangalore%2C+Karnataka&from=searchOnHP&vjk=0f89e69792d32bce')
 
+user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+options.add_argument(f'user-agent={user_agent}')
+driver = webdriver.Chrome(options=options)
+
+driver.get('https://in.indeed.com/jobs?q=graphics+designer&l=Bangalore%2C+Karnataka&from=searchOnHP&vjk=0f89e69792d32bce')
 roles=['Data Analyst']
 locations=['Mumbai']
 Title=[]
@@ -21,13 +27,13 @@ for role in roles:
     for loc in locations:
         try:
             for i in range(1,3):
-                Search=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, f'(//input[@type="text"])[{i}]')))
+                Search=WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, f'(//input[@type="text"])[{i}]')))
                 Search.click()
                 if i == 1:
-                    reset=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, f'(//button[@type="reset"])[{i}]'))).click()
+                    reset=WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, f'(//button[@type="reset"])[{i}]'))).click()
                     Search.send_keys(role)
                 else:
-                    reset=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, f'(//button[@type="reset"])[{i}]'))).click()
+                    reset=WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, f'(//button[@type="reset"])[{i}]'))).click()
                     Search.send_keys(loc + Keys.ENTER)
                     
             try:                    
@@ -66,5 +72,6 @@ for role in roles:
             continue
                 
 df=pd.DataFrame({'title':Title, 'company': Company, 'location': Location,'link':hrefs})
+print(df)
 engine = create_engine('mysql+mysqlconnector://root:Pass%40123@127.0.0.1/webscraping_db')
-df.to_sql(name='jobs', con=engine, if_exists='replace', index=False)       
+df.to_sql(name='jobs', con=engine, if_exists='replace', index=False) 
