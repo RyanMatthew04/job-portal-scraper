@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal Scraping</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f4f9;
+        }
+
+        #main {
+            text-align: center;
+            padding-top: 100px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #3b3b58;
+            font-size: 2.5em;
+        }
+
+        input[type='text'] {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 12px;
+            height: 50px;
+            width: 80%;
+            border: 1px solid #ccc;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type='submit'] {
+            width: 200px;
+            border-radius: 8px;
+            background-color: #ff7043;
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type='submit']:hover {
+            background-color: #d35f32;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        .job-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .job-table th, .job-table td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .job-table th {
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        .job-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .navbar {
+            background-color: #3b3b58;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            background-color: #52527a;
+        }
+
+        .navbar a.active {
+            background-color: #ff7043;
+        }
+
+        #main {
+            padding-top: 150px; /* Adjust for fixed navbar */
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="{% url 'home' %}" class="active">Home</a>
+        <a href="{% url 'saved_jobs' %}">Saved Jobs</a>
+    </div>
+
+    <div id="main">
+        <h1>Enter Role and Location</h1>
+        <form method="POST">
+            <input type="text" id="job" value="{{request.GET.job}}" placeholder="Search for job" name="job">
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if job_info_list %}
+        <table class="job-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Link</th>
+                    <th>Save</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in job_info_list %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.company }}</td>
+                    <td>{{ item.location }}</td>
+                    <td><a href="{{ item.link }}" target="_blank">View Job</a></td>
+                    <td>
+                        <form action="/save_job" method="POST">
+                            <input type="hidden" name="title" value="{{ item.title }}">
+                            <input type="hidden" name="company" value="{{ item.company }}">
+                            <input type="hidden" name="location" value="{{ item.location }}">
+                            <input type="hidden" name="link" value="{{ item.link }}">
+                            <input type="hidden" name="id" value="{{ item.id }}">
+                            <button type="submit">+</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    
+    </div>
+</body>
+</html>
+
+
