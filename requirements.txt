@@ -1,5 +1,0 @@
-pandas
-selenium
-sqlalchemy
-mysql-connector-python
-#-e .
