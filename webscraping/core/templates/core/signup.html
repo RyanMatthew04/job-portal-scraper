@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Signup Page</title>
+ 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <style media="screen">
+        *,
+        *:before,
+        *:after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #e7f3ff; /* Light blue background */
+        }
+        .background {
+            width: 430px;
+            height: 520px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            left: 50%;
+            top: 50%;
+        }
+        .background .shape {
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .shape:first-child {
+            background: linear-gradient(#007bff, #00aaff); /* Blue gradient */
+            left: -80px;
+            top: -80px;
+        }
+        .shape:last-child {
+            background: linear-gradient(to right, #007bff, #00aaff);
+            right: -30px;
+            bottom: -80px;
+        }
+        form {
+            height: auto;
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.9); /* White background with slight transparency */
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 50px 35px;
+        }
+        form * {
+            font-family: 'Poppins', sans-serif;
+            color: #000; /* Dark text color */
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+        }
+        form h3 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 42px;
+            text-align: center;
+            color: #007bff; /* Blue color for the heading */
+        }
+        label {
+            display: block;
+            margin-top: 10px; /* Reduced margin for labels */
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        input {
+            display: block;
+            height: 40px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.05); /* Light grey for input fields */
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 5px; /* Reduced margin for inputs */
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        button {
+            margin-top: 20px; /* Reduced margin for better alignment */
+            width: 100%;
+            background-color: #007bff; /* Blue button */
+            color: #ffffff; /* White text for button */
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition on hover */
+        }
+
+        ::placeholder {
+            color: #888; /* Darker placeholder color */
+        }
+        
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff; /* Blue link color */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form method="post">
+        {% csrf_token %} 
+        <h3>Signup Here</h3>
+
+        <label for="username">Username</label>
+        <input type="text" placeholder="Username" name="username" id="username" required> 
+
+        <label for="email">Email</label>
+        <input type="email" placeholder="Email or Phone" name="email" id="email" required>
+
+        <label for="password1">Password</label>
+        <input type="password" placeholder="Password" name="password1" id="password1" required>
+
+        <label for="password2">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" name="password2" id="password2" required>
+
+        <button type="submit">Signup</button>
+
+        <a href="{% url 'login' %}">Already a member? Login now</a>
+    </form>
+    {% if messages %}
+    <script>
+        const messages = "{{ messages|join:', ' }}";  // Join messages with a comma
+        if (messages) {
+            alert(messages);
+        }
+    </script>
+    {% endif %}
+</body>
+</html>
+
+

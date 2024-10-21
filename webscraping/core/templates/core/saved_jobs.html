@@ -14,12 +14,12 @@
         }
 
         body {
-            background-color: #f4f4f9;
+            background-color: #e7f3ff; /* Light blue background */
         }
 
         .navbar {
-            background-color: #3b3b58;
-            padding: 10px;
+            background-color: #007bff; /* Blue navbar */
+            padding: 15px;
             position: fixed;
             top: 0;
             width: 100%;
@@ -37,73 +37,135 @@
         }
 
         .navbar a:hover {
-            background-color: #52527a;
+            background-color: #0056b3; /* Darker blue on hover */
         }
 
         .navbar a.active {
-            background-color: #ff7043;
+            background-color: #0056b3; /* Darker blue for active link */
+        }
+
+        .navbar .logout-btn {
+            float: right;
+            background-color: #007bff; /* Blue button */
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            margin: 6px;
+        }
+
+        .navbar .logout-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        input[type='submit'] {
+            width: 200px;
+            border-radius: 8px;
+            background-color: #007bff; /* Blue button */
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        input[type='submit']:hover {
+            background-color: #0056b3; /* Darker blue on hover */
         }
 
         #main {
             text-align: center;
-            padding-top: 150px;
+            padding-top: 150px; /* Adjust for fixed navbar */
             margin: 0 auto;
-            max-width: 800px;
+            max-width: 1200px;
+            padding: 20px;
         }
 
         h1 {
-            margin-bottom: 20px;
-            color: #3b3b58;
-            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #007bff; /* Blue heading */
+            font-size: 2.8em;
+            font-weight: 600;
         }
 
         .job-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .job-table th, .job-table td {
-            border: 1px solid #ddd;
+            border: 1px solid #007bff; /* Blue table borders */
             padding: 15px;
             text-align: left;
         }
 
         .job-table th {
-            background-color: #fafafa;
-            color: #333;
+            background-color: #f0f8ff; /* Light blue background for table headers */
+            color: #000000; /* Blue text for headers */
+            font-weight: 600;
+            font-size: 1.1em;
         }
 
         .job-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f9f9f9; /* Light gray background for alternating rows */
         }
 
-        button.delete-btn {
-            background-color: #ff4d4d;
+
+        button {
+            background-color: #007bff; /* Match your design */
             color: white;
             border: none;
-            padding: 8px;
-            border-radius: 4px;
+            border-radius: 5px;
+            padding: 5px 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        button.delete-btn:hover {
-            background-color: #e63946;
+        button:hover {
+            background-color: #0056b3; /* Darker on hover */
         }
 
-        p {
-            font-size: 1.2em;
-            color: #666;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-bar-container {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            input[type='text'] {
+                width: 90%;
+            }
+
+            input[type='submit'] {
+                width: 90%;
+            }
+
+            .navbar a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+
+            .navbar .logout-btn {
+                float: none;
+                width: 100%;
+                text-align: center;
+            }
         }
+        
     </style>
 </head>
 <body>
 
     <!-- Navigation bar -->
     <div class="navbar">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'saved_jobs' %}" class="active">Saved Jobs</a>
+        <a href="{% url 'home' %}?save=True">Find Jobs</a>
+        <a href="{% url 'saved_jobs' %}" class="active">Track Jobs</a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
 
     <div id="main">
@@ -113,7 +175,6 @@
         <table class="job-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Title</th>
                     <th>Company</th>
                     <th>Location</th>
@@ -124,15 +185,17 @@
             <tbody>
                 {% for job in saved_jobs_list %}
                 <tr>
-                    <td>{{ job.id }}</td>
-                    <td>{{ job.title }}</td>
-                    <td>{{ job.company }}</td>
+                    <td>{{ job.role }}</td>
+                    <td>{{ job.company_name }}</td>
                     <td>{{ job.location }}</td>
-                    <td><a href="{{ job.link }}" target="_blank">View Job</a></td>
+                    <td><a href="{{ job.job_link }}" target="_blank">View Job</a></td>
                     <td>
-                        <form action="{% url 'delete_job' job.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="delete-btn">-</button>
+                        <form action="/delete_job" method="POST">
+                            <input type="hidden" name="title" value="{{ job.role }}">
+                            <input type="hidden" name="company" value="{{ job.company_name }}">
+                            <input type="hidden" name="location" value="{{ job.location }}">
+                            <input type="hidden" name="link" value="{{ job.job_link }}">
+                            <button type="submit">-</button>
                         </form>
                     </td>
                 </tr>
